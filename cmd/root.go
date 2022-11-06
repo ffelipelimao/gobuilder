@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 NAME HERE @ffelipelimao
+Copyright © 2022 @ffelipelimao
 */
 package cmd
 
