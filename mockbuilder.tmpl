@@ -1,22 +1,30 @@
 package mockbuilder 
 
+type {{.Name}} struct {
+{{ range $key, $element := .Fields }}
+    {{ $key }} {{ $element }}
+{{end -}} 
+}
+
 type {{.Name}}MockBuilder struct {
-    mock entities.{{.Name}}
+    mock {{.Name}}
 } 
 
-func {{.Name}}() *{{.Name}}MockBuilder{
+func {{.Name}}Builder() *{{.Name}}MockBuilder{
     return &{{.Name}}MockBuilder{
         mock: Mock{{.Name}},
     }
 }
 
-func (b *{{.Name}}MockBuilder) Build() entities.{{.Name}} {
+var Mock{{.Name}} = {{.Name}}{}
+
+func (b *{{.Name}}MockBuilder) Build() {{.Name}} {
 	return b.mock
 }
 
 {{ range $key, $element := .Fields }}
 
-func (b *{{$.Name}}MockBuilder) With{{ $key }}(value {{ $element }}) entities.{{$.Name}} {
+func (b *{{$.Name}}MockBuilder) With{{ $key }}(value {{ $element }}) {{$.Name}} {
 	b.mock.{{ $key }} = value
     return b.mock
 }
