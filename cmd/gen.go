@@ -16,7 +16,6 @@ var fields string
 
 // genCmd represents the gen command
 var genCmd = &cobra.Command{
-
 	Use:   "gen",
 	Short: "gen can create your mockbuilder files",
 	Long: "gen create your mockbuilder file.\n" +
