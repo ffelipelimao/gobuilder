@@ -19,6 +19,7 @@ This application is a tool to generate files quickly.`,
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
+
 		os.Exit(1)
 	}
 }
