@@ -2,7 +2,10 @@ module github.com/ffelipelimao/gobuilder
 
 go 1.19
 
-require github.com/Masterminds/sprig v2.22.0+incompatible
+require (
+	github.com/Masterminds/sprig v2.22.0+incompatible
+	github.com/spf13/cobra v1.6.1
+)
 
 require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
@@ -13,9 +16,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
-	github.com/spf13/cobra v1.6.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.8.1 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
