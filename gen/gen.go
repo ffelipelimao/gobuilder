@@ -31,7 +31,7 @@ func Start(name string, fields string) error {
 	}
 
 	filename := strings.ToLower(fmt.Sprintf("%s.go", object.Name))
-	generate("mockbuilder.tmpl", filename, object)
+	generate("./mockbuilder.tmpl", filename, object)
 
 	return nil
 }
