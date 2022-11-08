@@ -3,6 +3,7 @@ package gen
 import (
 	"bufio"
 	"bytes"
+	_ "embed"
 	"errors"
 	"fmt"
 	"go/format"
@@ -14,13 +15,15 @@ import (
 	"github.com/Masterminds/sprig"
 )
 
+//go:embed "mockbuilder.tmpl"
+var MockBuilderTmpl string
+
 type Object struct {
 	Name   string
 	Fields map[string]string
 }
 
 func Start(name string, fields string) error {
-
 	if name == "" {
 		return errors.New("missing -n flag value")
 	}
@@ -31,7 +34,7 @@ func Start(name string, fields string) error {
 	}
 
 	filename := strings.ToLower(fmt.Sprintf("%s.go", object.Name))
-	generate("./mockbuilder.tmpl", filename, object)
+	generate(MockBuilderTmpl, filename, object)
 
 	return nil
 }
@@ -57,13 +60,13 @@ func createObject(name string, fields string) (Object, error) {
 	}, nil
 }
 
-func generate(fileName string, outputFile string, data Object) {
+func generate(MockBuilderTmpl string, outputFile string, data Object) {
 	tmpl := template.Must(template.New("").
 		Funcs(sprig.FuncMap()).
-		ParseFiles(fileName))
+		Parse(MockBuilderTmpl))
 
 	var processed bytes.Buffer
-	err := tmpl.ExecuteTemplate(&processed, fileName, data)
+	err := tmpl.Execute(&processed, data)
 	if err != nil {
 		log.Fatalf("Unable to parse data into template: %v\n", err)
 	}
