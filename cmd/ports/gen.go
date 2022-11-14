@@ -1,13 +1,13 @@
 /*
 Copyright © 2022 @ffelipelimao
 */
-package cmd
+package ports
 
 import (
 	"fmt"
 	"os"
 
-	"github.com/ffelipelimao/gobuilder/gen"
+	"github.com/ffelipelimao/gobuilder/cmd/gen"
 	"github.com/spf13/cobra"
 )
 
