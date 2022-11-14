@@ -3,7 +3,6 @@ package gen
 import (
 	"bufio"
 	"bytes"
-	_ "embed"
 	"errors"
 	"fmt"
 	"go/format"
@@ -12,11 +11,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/Masterminds/sprig"
+	"github.com/ffelipelimao/gobuilder/cmd/gen/tmpls"
 )
-
-//go:embed "mockbuilder.tmpl"
-var MockBuilderTmpl string
 
 type Object struct {
 	Name   string
@@ -34,7 +30,7 @@ func Start(name string, fields string) error {
 	}
 
 	filename := strings.ToLower(fmt.Sprintf("%s.go", object.Name))
-	generate(MockBuilderTmpl, filename, object)
+	generate(tmpls.MockBuilderTmpl, filename, object)
 
 	return nil
 }
@@ -62,7 +58,6 @@ func createObject(name string, fields string) (Object, error) {
 
 func generate(MockBuilderTmpl string, outputFile string, data Object) {
 	tmpl := template.Must(template.New("").
-		Funcs(sprig.FuncMap()).
 		Parse(MockBuilderTmpl))
 
 	var processed bytes.Buffer

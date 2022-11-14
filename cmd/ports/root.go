@@ -1,7 +1,7 @@
 /*
 Copyright © 2022 @ffelipelimao
 */
-package cmd
+package ports
 
 import (
 	"os"
