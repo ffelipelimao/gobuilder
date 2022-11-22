@@ -13,6 +13,7 @@ import (
 
 var name string
 var fields string
+var destination string
 
 // genCmd represents the gen command
 var genCmd = &cobra.Command{
@@ -23,7 +24,7 @@ var genCmd = &cobra.Command{
 		"If you have any doubt see README.md to see examples",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		err := gen.Start(name, fields)
+		err := gen.Start(name, fields, destination)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			fmt.Println("if you have any doubt see README.md to see examples")
@@ -37,4 +38,5 @@ func init() {
 
 	genCmd.Flags().StringVarP(&name, "name", "n", "", "mockbuilder name")
 	genCmd.Flags().StringVarP(&fields, "fields", "f", "", "fields separated by comma with types separated by -")
+	genCmd.Flags().StringVarP(&destination, "destination", "d", "", "the destination folder")
 }
