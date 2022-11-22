@@ -8,6 +8,7 @@ import (
 	"go/format"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -19,7 +20,7 @@ type Object struct {
 	Fields map[string]string
 }
 
-func Start(name string, fields string) error {
+func Start(name string, fields string, destination string) error {
 	if name == "" {
 		return errors.New("missing -n flag value")
 	}
@@ -30,7 +31,8 @@ func Start(name string, fields string) error {
 	}
 
 	filename := strings.ToLower(fmt.Sprintf("%s.go", object.Name))
-	generate(tmpls.MockBuilderTmpl, filename, object)
+
+	createFile(tmpls.MockBuilderTmpl, filename, object, destination)
 
 	return nil
 }
@@ -47,7 +49,8 @@ func createObject(name string, fields string) (Object, error) {
 		}
 		key := fieldsClovenByType[0]
 		value := fieldsClovenByType[1]
-		fieldsMapper[key] = value
+		v := checkSymbols(value)
+		fieldsMapper[key] = v
 	}
 
 	return Object{
@@ -56,7 +59,17 @@ func createObject(name string, fields string) (Object, error) {
 	}, nil
 }
 
-func generate(MockBuilderTmpl string, outputFile string, data Object) {
+func checkSymbols(value string) string {
+	if strings.HasPrefix(value, "p") {
+		return strings.Replace(value, "p", "*", -1)
+	}
+	if strings.HasPrefix(value, "a") {
+		return strings.Replace(value, "a", "[]", -1)
+	}
+	return value
+}
+
+func createFile(MockBuilderTmpl string, outputFile string, data Object, destination string) {
 	tmpl := template.Must(template.New("").
 		Parse(MockBuilderTmpl))
 
@@ -72,7 +85,15 @@ func generate(MockBuilderTmpl string, outputFile string, data Object) {
 	}
 
 	fmt.Println("Writing file: ", outputFile)
-	f, _ := os.Create(outputFile)
+
+	if _, err := os.Stat(destination); os.IsNotExist(err) {
+		os.MkdirAll(destination, 0700)
+	}
+
+	path := filepath.Join(destination, outputFile)
+	newFilePath := filepath.FromSlash(path)
+	f, _ := os.Create(newFilePath)
+
 	w := bufio.NewWriter(f)
 	w.WriteString(string(formatted))
 	w.Flush()
