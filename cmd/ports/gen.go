@@ -4,9 +4,6 @@ Copyright © 2022 @ffelipelimao
 package ports
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/ffelipelimao/gobuilder/cmd/gen"
 	"github.com/spf13/cobra"
 )
@@ -24,12 +21,7 @@ var genCmd = &cobra.Command{
 		"If you have any doubt see README.md to see examples",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		err := gen.Start(name, fields, destination)
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err.Error())
-			fmt.Println("if you have any doubt see README.md to see examples")
-			os.Exit(1)
-		}
+		gen.Start(name, fields, destination)
 	},
 }
 

@@ -3,7 +3,6 @@ package gen
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"go/format"
 	"log"
@@ -20,24 +19,20 @@ type Object struct {
 	Fields map[string]string
 }
 
-func Start(name string, fields string, destination string) error {
+func Start(name string, fields string, destination string) {
 	if name == "" {
-		return errors.New("missing -n flag value")
+		log.Fatalf("Missing -n flag value")
 	}
 
-	object, err := createObject(name, fields)
-	if err != nil {
-		return err
-	}
+	object := createObject(name, fields)
 
 	filename := strings.ToLower(fmt.Sprintf("%s.go", object.Name))
 
 	createFile(tmpls.MockBuilderTmpl, filename, object, destination)
 
-	return nil
 }
 
-func createObject(name string, fields string) (Object, error) {
+func createObject(name string, fields string) Object {
 
 	fieldsMapper := make(map[string]string)
 	fieldsCloven := strings.Split(fields, ",")
@@ -45,7 +40,7 @@ func createObject(name string, fields string) (Object, error) {
 	for _, f := range fieldsCloven {
 		fieldsClovenByType := strings.Split(f, "-")
 		if len(fieldsClovenByType) < 2 {
-			return Object{}, errors.New("there's one field who is not in Name-type")
+			log.Fatalf("There's one field who is not in Name-type")
 		}
 		key := fieldsClovenByType[0]
 		value := fieldsClovenByType[1]
@@ -56,7 +51,7 @@ func createObject(name string, fields string) (Object, error) {
 	return Object{
 		Name:   name,
 		Fields: fieldsMapper,
-	}, nil
+	}
 }
 
 func checkSymbols(value string) string {
@@ -92,7 +87,11 @@ func createFile(MockBuilderTmpl string, outputFile string, data Object, destinat
 
 	path := filepath.Join(destination, outputFile)
 	newFilePath := filepath.FromSlash(path)
-	f, _ := os.Create(newFilePath)
+
+	f, err := os.Create(newFilePath)
+	if err != nil {
+		log.Fatalf("Could not create file: %v\n", err)
+	}
 
 	w := bufio.NewWriter(f)
 	w.WriteString(string(formatted))
